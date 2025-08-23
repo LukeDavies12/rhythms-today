@@ -21,9 +21,9 @@ export const SignUpSchema = z.object({
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address"),
   password: z.string().min(8),
   username: z.string().optional(),
-});
+})
 
-export type SignUpDTO = z.infer<typeof SignUpSchema>;
+export type SignUpDTO = z.infer<typeof SignUpSchema>
 
 export const SignInSchema = z.object({
   email: z.string()
@@ -31,6 +31,6 @@ export const SignInSchema = z.object({
     .toLowerCase()
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address"),
   password: z.string().min(8),
-});
+})
 
-export type SignInDTO = z.infer<typeof SignInSchema>;
+export type SignInDTO = z.infer<typeof SignInSchema>

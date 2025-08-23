@@ -10,10 +10,8 @@ export default async function AppPage() {
   const displayName = user.person_username || user.person_email;
 
   return (
-    <div className="min-h-[calc(100vh-10rem)] pt-12">
-      <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-8">
-        Hello, <span className="font-medium text-neutral-900 dark:text-neutral-100">{displayName}</span>!
-      </p>
-    </div>
+    <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-8">
+      Hello, <span className="font-medium text-neutral-900 dark:text-neutral-100">{displayName}</span>!
+    </p>
   );
 }

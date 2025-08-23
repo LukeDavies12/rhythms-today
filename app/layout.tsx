@@ -28,7 +28,7 @@ export default async function RootLayout({
       <head>
         <meta name="apple-mobile-web-app-title" content="rhythms" />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased px-4 lg:w-10/12 mx-auto max-w-7xl`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased px-4 lmd:px-6`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
