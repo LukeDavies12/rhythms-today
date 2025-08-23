@@ -4,7 +4,6 @@ import { sql } from "@/db/db";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { cache } from "react";
 import {
   Person,
   Session,
@@ -57,7 +56,7 @@ async function validateSessionToken(token: string): Promise<SessionValidationRes
       p.person_username,
       p.person_date_signed_up
     FROM session s
-    JOIN person p ON s.person_key = p.person_key
+    JOIN person p ON s.session_person_key = p.person_key
     WHERE s.session_key = ${token}
   `;
 
@@ -69,7 +68,7 @@ async function validateSessionToken(token: string): Promise<SessionValidationRes
 
   const session: Session = {
     session_key: row.session_key,
-    session_person_key: row.person_key,
+    session_person_key: row.session_person_key,
     session_created_at: new Date(row.session_created_at),
     session_expires_at: new Date(row.session_expires_at),
   };
@@ -81,13 +80,14 @@ async function validateSessionToken(token: string): Promise<SessionValidationRes
     person_date_signed_up: new Date(row.person_date_signed_up),
   };
 
-  // Check if session is expired
+  // Expiry check
   if (Date.now() >= session.session_expires_at.getTime()) {
     await sql`SELECT sp_invalidate_session(${session.session_key});`;
+    await deleteSessionTokenCookie();
     return { session: null, person: null };
   }
 
-  // Auto-refresh session if within 15 days of expiry (researched)
+  // Auto-refresh if within 15 days
   const fifteenDaysBeforeExpiry = session.session_expires_at.getTime() - 1000 * 60 * 60 * 24 * 15;
   if (Date.now() >= fifteenDaysBeforeExpiry) {
     const newExpiresAt = new Date(Date.now() + SESSION_DURATION_MS);
@@ -103,10 +103,11 @@ async function validateSessionToken(token: string): Promise<SessionValidationRes
 }
 
 // Sign Up
-export async function signUp(data: SignUpDTO): Promise<Person> {
+export async function signUp(data: SignUpDTO): Promise<void> {
   const parsed = SignUpSchema.parse(data);
   const hashed = await bcrypt.hash(parsed.password, 10);
 
+  // Create person (account)
   const [person] = await sql`
     SELECT * FROM sp_create_person(
       ${parsed.email},
@@ -115,34 +116,10 @@ export async function signUp(data: SignUpDTO): Promise<Person> {
     );
   ` as Person[];
 
-  return {
-    ...person,
-    person_date_signed_up: new Date(person.person_date_signed_up),
-  };
-}
-
-// Sign In
-export async function signIn(data: SignInDTO): Promise<Session | null> {
-  const parsed = SignInSchema.parse(data);
-
-  // Get person
-  const [person] = await sql`
-    SELECT * FROM person WHERE person_email = ${parsed.email};
-  ` as Person[];
-
-  if (!person) return null;
-
-  // Get stored hash (TEXT)
-  const [pw] = await sql`
-    SELECT person_hashed_password FROM person WHERE person_key = ${person.person_key};
-  ` as { person_hashed_password: string }[];
-
-  const valid = await bcrypt.compare(parsed.password, pw.person_hashed_password);
-  if (!valid) return null;
-
   // Create session
   const sessionKey = crypto.randomUUID();
   const expiresAt = new Date(Date.now() + SESSION_DURATION_MS);
+
   const [session] = await sql`
     SELECT * FROM sp_create_session(
       ${sessionKey},
@@ -151,13 +128,49 @@ export async function signIn(data: SignInDTO): Promise<Session | null> {
     );
   ` as Session[];
 
+  // Set session cookie
   await setSessionTokenCookie(session.session_key, expiresAt);
+}
 
-  return {
-    ...session,
-    session_created_at: new Date(session.session_created_at),
-    session_expires_at: new Date(session.session_expires_at),
-  };
+// Sign In
+export async function signIn(data: SignInDTO): Promise<void> {
+  const parsed = SignInSchema.parse(data);
+
+  // Get person
+  const [person] = await sql`
+    SELECT * FROM person WHERE person_email = ${parsed.email};
+  ` as Person[];
+
+  if (!person) {
+    throw new Error('Invalid email or password');
+  }
+
+  // Get stored hash as Buffer from bytea
+  const [pw] = await sql`
+    SELECT person_hashed_password FROM person WHERE person_key = ${person.person_key};
+  ` as { person_hashed_password: Buffer }[];
+
+  // Convert Buffer to string for bcrypt comparison
+  const hashString = pw.person_hashed_password.toString('utf8');
+
+  const valid = await bcrypt.compare(parsed.password, hashString);
+  if (!valid) {
+    throw new Error('Invalid email or password');
+  }
+
+  // Create session
+  const sessionKey = crypto.randomUUID();
+  const expiresAt = new Date(Date.now() + SESSION_DURATION_MS);
+
+  const [session] = await sql`
+  SELECT * FROM sp_create_session(
+    ${sessionKey},
+    ${person.person_key},
+    ${expiresAt}
+  );
+` as Session[];
+
+  await setSessionTokenCookie(session.session_key, expiresAt);
 }
 
 // Sign Out with proper cleanup
@@ -176,19 +189,13 @@ export async function deleteSession(): Promise<void> {
   await signOut();
 }
 
-// Cached session validation
-export const getCurrentSession = cache(
-  async (): Promise<SessionValidationResult> => {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("session")?.value ?? null;
-
-    if (token === null) {
-      return { session: null, person: null };
-    }
-
-    return validateSessionToken(token);
-  }
-);
+// Session validation
+export const getCurrentSession = async (): Promise<SessionValidationResult> => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("session")?.value ?? null;
+  if (!token) return { session: null, person: null };
+  return validateSessionToken(token);
+};
 
 // Convenience functions for easier usage
 export async function getCurrentPerson(): Promise<Person | null> {
