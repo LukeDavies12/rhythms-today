@@ -1,17 +1,9 @@
-'use client';
-
-import GetStarted from '@/components/sections/auth/get-started';
-import LogBackIn from '@/components/sections/auth/log-back-in';
 import LogoSite from '@/components/sections/brand/logo-site';
 import { BrandButton } from '@/components/ui/brand-button';
 import { SecondaryButton } from '@/components/ui/secondary-button';
 import Link from 'next/link';
-import { useState } from 'react';
 
 export default function Home() {
-  const [isGetStartedOpen, setIsGetStartedOpen] = useState(false);
-  const [isLogBackInOpen, setIsLogBackInOpen] = useState(false);
-
   return (
     <>
       <div className="mt-4 lg:mt-20 lg:w-2/5 lg:ml-28">
@@ -42,16 +34,6 @@ export default function Home() {
           </Link>
         </div>
       </div>
-
-      <GetStarted
-        isOpen={isGetStartedOpen}
-        onClose={() => setIsGetStartedOpen(false)}
-      />
-
-      <LogBackIn
-        isOpen={isLogBackInOpen}
-        onClose={() => setIsLogBackInOpen(false)}
-      />
     </>
   );
 }
