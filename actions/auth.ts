@@ -54,7 +54,9 @@ async function validateSessionToken(token: string): Promise<SessionValidationRes
       p.person_key as p_key,
       p.person_email,
       p.person_username,
-      p.person_date_signed_up
+      p.person_is_paying,
+      p.person_date_signed_up,
+      p.person_using_tagging
     FROM session s
     JOIN person p ON s.session_person_key = p.person_key
     WHERE s.session_key = ${token}
@@ -77,7 +79,9 @@ async function validateSessionToken(token: string): Promise<SessionValidationRes
     person_key: row.p_key,
     person_email: row.person_email,
     person_username: row.person_username,
+    person_is_paying: row.person_is_paying,
     person_date_signed_up: new Date(row.person_date_signed_up),
+    person_using_tagging: row.person_using_tagging
   };
 
   // Expiry check

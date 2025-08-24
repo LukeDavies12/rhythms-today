@@ -3,6 +3,7 @@
 import { sql } from "@/db/db";
 import { CreateDayGoalDTO, CreateDayGoalSchema, DayGoal } from "@/types/dayGoal";
 import { revalidateTag } from "next/cache";
+import { unstable_cacheTag as cacheTag } from "next/cache";
 
 export async function createDayGoal(data: CreateDayGoalDTO): Promise<void> {
   const parsed = CreateDayGoalSchema.parse(data);
@@ -23,18 +24,6 @@ export async function createDayGoal(data: CreateDayGoalDTO): Promise<void> {
   revalidateTag(`day-goals-${parsed.dayGoalPersonKey}`);
 }
 
-// Uncached version for client-side usage
-export async function getDayGoals(personKey: string, date: Date): Promise<DayGoal[]> {
-  const dayGoals = await sql`
-    SELECT * FROM day_goal 
-    WHERE day_goal_person_key = ${personKey}::uuid 
-    AND day_goal_date = ${date}
-    ORDER BY day_goal_sort ASC, day_goal_created_at ASC;
-  ` as DayGoal[];
-
-  return dayGoals;
-}
-
 // Cached version for today's goals specifically
 export async function getTodaysGoals(personKey: string): Promise<DayGoal[]> {
   'use cache';
@@ -42,8 +31,8 @@ export async function getTodaysGoals(personKey: string): Promise<DayGoal[]> {
   const today = new Date();
   const todayStr = today.toISOString().split('T')[0];
   
-  // Dynamic cache tags based on today's date
-  const tags = `day-goals-${personKey}-${todayStr},day-goals-${personKey}`;
+  // Tag the cache with both specific date and general person tags
+  cacheTag(`day-goals-${personKey}-${todayStr}`, `day-goals-${personKey}`);
   
   const dayGoals = await sql`
     SELECT * FROM day_goal 

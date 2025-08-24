@@ -4,7 +4,9 @@ export interface Person {
   person_key: string;
   person_email: string;
   person_username: string | null;
+  person_is_paying: boolean;
   person_date_signed_up: Date;
+  person_using_tagging: boolean;
 }
 
 export interface Session {

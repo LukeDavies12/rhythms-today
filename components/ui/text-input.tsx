@@ -6,6 +6,7 @@ interface TextInputProps {
   type?: 'text' | 'email' | 'password';
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   error?: string;
   className?: string;
   required?: boolean;
@@ -18,6 +19,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(({
   type = 'text',
   value,
   onChange,
+  onKeyDown,
   error,
   className = '',
   required = false,
@@ -30,7 +32,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(({
     <div className={`flex flex-col ${className}`}>
       {label && (
         <label
-          className="mb-2 font-bold text-neutral-900 dark:text-neutral-100"
+          className="mb-1 font-medium text-neutral-600 dark:text-neutral-400"
           htmlFor={inputId}>
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
@@ -43,14 +45,14 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onKeyDown={onKeyDown}
         name={name}
         required={required}
-        className={`px-3 py-2 border-2 font-medium
-          bg-white dark:bg-neutral-900
-          text-neutral-900 dark:text-neutral-100
+        className={`px-2 py-1.5 font-medium
+          bg-neutral-100 hover:bg-neutral-200 focus:bg-neutral-200 dark:bg-neutral-800
+          text-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-900 dark:focus:bg-neutral-900
           placeholder:text-neutral-500 dark:placeholder:text-neutral-400
-          border-neutral-300 dark:border-neutral-700
-          focus:border-brand focus:outline-none
+           focus:outline-none
           ${error ? 'border-red-500 focus:border-red-500' : ''}
           transition-all duration-100 ease-in`}
         {...props}

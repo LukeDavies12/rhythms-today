@@ -147,7 +147,7 @@ function UserInfo({ user }: { user: Person }) {
 
   return (
     <Tooltip content={`Signed in as ${user.person_email}`} position="top-right">
-      <div className="flex items-center gap-2 px-3 py-1.5
+      <div className="flex items-center gap-2 px-2 py-1.5
         bg-neutral-50 dark:bg-neutral-900
         border border-neutral-200 dark:border-neutral-800">
         <div className="w-6 h-6 bg-brand text-white text-xs font-medium
