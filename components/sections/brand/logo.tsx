@@ -7,9 +7,8 @@ interface LogoProps {
 
 export default function Logo({ url }: LogoProps) {
   return (
-    <Link href={url} className="flex gap-2 items-center font-medium dark:text-neutral-100 text-neutral-900">
-      <Image src={"/rhythms_logo.svg"} height={48} width={72} className="w-7" alt={"rhythms.today Logo"} />
-      rhythms.today
+    <Link href={url}>
+      <Image src={"/rhythms_logo.svg"} height={48} width={72} className="w-8" alt={"rhythms.today Logo"} />
     </Link>
   );
 }

@@ -1,3 +1,5 @@
+import LogBackInIcon from '@/components/icons/log-back-in-icon';
+import PersonIcon from '@/components/icons/person-icon';
 import LogoSite from '@/components/sections/brand/logo-site';
 import { BrandButton } from '@/components/ui/brand-button';
 import { SecondaryButton } from '@/components/ui/secondary-button';
@@ -23,13 +25,15 @@ export default function Home() {
           <Link href="/get-started">
             <BrandButton
               text="Get Started"
-              className="w-44"
+              className="w-52"
+              icon={<PersonIcon/>}
             />
           </Link>
           <Link href="/log-back-in">
             <SecondaryButton
               text="Log Back In"
-              className="w-44"
+              className="w-52"
+              icon={<LogBackInIcon/>}
             />
           </Link>
         </div>

@@ -1,15 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useTheme } from 'next-themes';
-import { Settings, Sun, Moon, Monitor, LogOut, User } from 'lucide-react';
 import { signOut } from '@/actions/auth';
-import { Person } from '@/types/auth';
+import DesktopIcon from '@/components/icons/desktop-icon';
+import LogOutIcon from '@/components/icons/log-out-icon';
+import MoonIcon from '@/components/icons/moon-icon';
+import SettingsIcon from '@/components/icons/settings-icon';
+import SunIcon from '@/components/icons/sun-icon';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 import Logo from '../brand/logo';
-
-interface AppNavbarProps {
-  user: Person;
-}
 
 interface TooltipProps {
   children: React.ReactNode;
@@ -62,11 +61,11 @@ function ThemeButton({ theme, onCycleTheme }: { theme: string | undefined, onCyc
   const getThemeIcon = () => {
     switch (theme) {
       case 'light':
-        return <Sun size={18} className="transition-transform duration-200 group-hover:rotate-12" />;
+        return <SunIcon size={18} className="transition-transform duration-200 group-hover:rotate-12" />;
       case 'dark':
-        return <Moon size={18} className="transition-transform duration-200 group-hover:-rotate-12" />;
+        return <MoonIcon size={18} className="transition-transform duration-200 group-hover:-rotate-12" />;
       default:
-        return <Monitor size={18} className="transition-transform duration-200 group-hover:scale-110" />;
+        return <DesktopIcon size={18} className="transition-transform duration-200 group-hover:scale-110" />;
     }
   };
 
@@ -141,28 +140,7 @@ function ActionButton({
   );
 }
 
-function UserInfo({ user }: { user: Person }) {
-  const displayName = user.person_username || user.person_email?.split('@')[0] || 'User';
-  const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-
-  return (
-    <Tooltip content={`Signed in as ${user.person_email}`} position="top-right">
-      <div className="flex items-center gap-2 px-2 py-1.5
-        bg-neutral-50 dark:bg-neutral-900
-        border border-neutral-200 dark:border-neutral-800">
-        <div className="w-6 h-6 bg-brand text-white text-xs font-medium
-          flex items-center justify-center">
-          {initials}
-        </div>
-        <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300 hidden sm:inline">
-          {displayName}
-        </span>
-      </div>
-    </Tooltip>
-  );
-}
-
-export default function AppNavbar({ user }: AppNavbarProps) {
+export default function AppNavbar() {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -175,7 +153,7 @@ export default function AppNavbar({ user }: AppNavbarProps) {
       <nav className="fixed bottom-0 left-0 right-0 z-40
         bg-white dark:bg-neutral-950
         border-t border-neutral-200/50 dark:border-neutral-800/50
-        px-4 py-3.5 md:px-6">
+        px-4 py-2 md:px-6">
         <div className="mx-auto flex items-center justify-between">
           <div className="flex items-center">
             <Logo url="/app" />
@@ -206,34 +184,27 @@ export default function AppNavbar({ user }: AppNavbarProps) {
       bg-white/90 dark:bg-neutral-950/90
       backdrop-blur-md backdrop-saturate-150
       border-t border-neutral-200/50 dark:border-neutral-800/50
-      px-4 py-3 md:px-6
+      px-4 py-2 md:px-6
       shadow-lg shadow-neutral-900/5 dark:shadow-neutral-100/5">
       <div className="mx-auto flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Logo url="/app" />
-          <div className="hidden md:block">
-            <UserInfo user={user} />
-          </div>
         </div>
         
         <div className="flex items-center gap-1">
-          <div className="md:hidden">
-            <UserInfo user={user} />
-          </div>
-          
           <div className="flex items-center gap-1 ml-2">
             <ThemeButton theme={theme} onCycleTheme={cycleTheme} />
             
             <ActionButton
-              onClick={() => {/* Add settings handler */}}
-              icon={<Settings size={18} />}
+              onClick={() => {}}
+              icon={<SettingsIcon size={18} />}
               label="Settings"
             />
             
             <ActionButton
               onClick={handleSignOut}
-              icon={<LogOut size={18} />}
-              label="Sign out"
+              icon={<LogOutIcon size={18} />}
+              label="Log out"
               variant="danger"
               tooltipPosition="top-left"
             />

@@ -1,15 +1,19 @@
+import { ReactNode } from "react";
+
 interface SecondaryButtonProps {
   text: string;
   onClick?: () => void;
   className?: string;
-  type?: 'button' | 'submit' | 'reset';
+  type?: "button" | "submit" | "reset";
+  icon?: ReactNode;
 }
 
 export function SecondaryButton({
   text,
   onClick,
-  className = '',
-  type = 'button'
+  className = "",
+  type = "button",
+  icon,
 }: SecondaryButtonProps) {
   return (
     <button
@@ -19,11 +23,13 @@ export function SecondaryButton({
         hover:brightness-90 dark:hover:brightness-110
         active:brightness-75 dark:active:brightness-125 active:scale-95
         focus:outline-none focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-600
-        transition-all duration-200 ease-out text-left ${className}`}
+        transition-all duration-200 ease-out flex items-center justify-between gap-2
+        ${className}`}
       onClick={onClick}
       type={type}
     >
-      {text}
+      <span>{text}</span>
+      {icon && <span className="ml-auto">{icon}</span>}
     </button>
   );
 }
