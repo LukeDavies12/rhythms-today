@@ -154,7 +154,7 @@ export default function AppNavbar() {
         bg-white dark:bg-neutral-950
         border-t border-neutral-200/50 dark:border-neutral-800/50
         px-4 py-2 md:px-6
-        h-16">
+        h-12">
         <div className="mx-auto flex items-center justify-between h-full">
           <div className="flex items-center">
             <Logo url="/app" />
@@ -187,7 +187,7 @@ export default function AppNavbar() {
       border-t border-neutral-200/50 dark:border-neutral-800/50
       px-4 py-2 md:px-6
       shadow-lg shadow-neutral-900/5 dark:shadow-neutral-100/5
-      h-16">
+      h-12">
       <div className="mx-auto flex items-center justify-between h-full">
         <div className="flex items-center gap-4">
           <Logo url="/app" />

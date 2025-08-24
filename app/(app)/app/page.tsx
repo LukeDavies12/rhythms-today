@@ -57,7 +57,7 @@ export default async function AppPage() {
         </div>
       </div>
 
-      <div className="hidden md:grid md:grid-cols-2 md:grid-rows-3 md:h-[calc(100vh-4rem)] md:overflow-hidden">
+      <div className="hidden md:grid md:grid-cols-2 md:grid-rows-3 md:h-[calc(100vh-3rem)] md:overflow-hidden">
         <div className="md:row-span-2 md:overflow-y-auto p-3">
           <h2 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-3">
             Today's Goals
@@ -140,7 +140,7 @@ function TodaysGoalsSkeleton() {
     <div className="animate-pulse space-y-4">
       <div className="space-y-3">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-16 bg-neutral-100 dark:bg-neutral-800"></div>
+          <div key={i} className="h-12 bg-neutral-100 dark:bg-neutral-800"></div>
         ))}
       </div>
     </div>
