@@ -108,7 +108,7 @@ export default function LogBackInPage() {
        </div>
      </div>
 
-     <div className="relative h-64 lg:h-full -mr-4">
+     <div className="relative h-64 lg:h-full">
        <Image 
          src="/mtns.jpg"
          alt="Log Back In"

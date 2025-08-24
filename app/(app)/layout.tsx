@@ -10,8 +10,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="min-h-screen pt-3">
-      {children}
+    <div className="min-h-screen">
+      <main className="pb-16">
+        {children}
+      </main>
       <AppNavbar />
     </div>
   );

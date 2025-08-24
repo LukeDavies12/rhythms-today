@@ -120,7 +120,7 @@ export default function GetStartedPage() {
        </div>
      </div>
 
-     <div className="relative h-64 lg:h-full -mr-4">
+     <div className="relative h-64 lg:h-full">
        <Image 
          src="/mtns2.jpg" 
          alt="Get Started" 

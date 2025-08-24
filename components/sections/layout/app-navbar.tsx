@@ -153,8 +153,9 @@ export default function AppNavbar() {
       <nav className="fixed bottom-0 left-0 right-0 z-40
         bg-white dark:bg-neutral-950
         border-t border-neutral-200/50 dark:border-neutral-800/50
-        px-4 py-2 md:px-6">
-        <div className="mx-auto flex items-center justify-between">
+        px-4 py-2 md:px-6
+        h-16">
+        <div className="mx-auto flex items-center justify-between h-full">
           <div className="flex items-center">
             <Logo url="/app" />
           </div>
@@ -185,8 +186,9 @@ export default function AppNavbar() {
       backdrop-blur-md backdrop-saturate-150
       border-t border-neutral-200/50 dark:border-neutral-800/50
       px-4 py-2 md:px-6
-      shadow-lg shadow-neutral-900/5 dark:shadow-neutral-100/5">
-      <div className="mx-auto flex items-center justify-between">
+      shadow-lg shadow-neutral-900/5 dark:shadow-neutral-100/5
+      h-16">
+      <div className="mx-auto flex items-center justify-between h-full">
         <div className="flex items-center gap-4">
           <Logo url="/app" />
         </div>
